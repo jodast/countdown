@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@2.14.0/dist/full.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="w-screen h-screen">
+      <div>
+        <input
+          type="datetime-local"
+          id="countdownDate"
+          name="meeting-time"
+          value="2022-06-12T19:30"
+        />
+      </div>
+      <div>
+        <button id="startCountdown" class="btn">Hide Selection</button>
+      </div>
+      <div
+        class="grid grid-flow-col gap-5 text-center auto-cols-max place-items-center justify-center w-full h-full"
+      >
+        <div class="flex flex-col">
+          <span class="countdown font-mono text-5xl">
+            <span id="days" style="--value: 15"></span>
+          </span>
+          days
+        </div>
+        <div class="flex flex-col">
+          <span class="countdown font-mono text-5xl">
+            <span id="hours" style="--value: 10"></span>
+          </span>
+          hours
+        </div>
+        <div class="flex flex-col">
+          <span class="countdown font-mono text-5xl">
+            <span id="minutes" style="--value: 24"></span>
+          </span>
+          minutes
+        </div>
+        <div class="flex flex-col">
+          <span class="countdown font-mono text-5xl">
+            <span id="seconds" style="--value: 49"></span>
+          </span>
+          seconds
+        </div>
+      </div>
+    </div>
+    <script>
+      "use strict";
+
+      const countdownDateInput = document.getElementById("countdownDate");
+      const startCountdownInput = document.getElementById("startCountdown");
+      const days = document.getElementById("days");
+      const hours = document.getElementById("hours");
+      const minutes = document.getElementById("minutes");
+      const seconds = document.getElementById("seconds");
+      const targetTime = { time: new Date("2022-06-12T19:30") };
+
+      const dhm = (ms) => {
+        const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+        const daysms = ms % (24 * 60 * 60 * 1000);
+        const hours = Math.floor(daysms / (60 * 60 * 1000));
+        const hoursms = ms % (60 * 60 * 1000);
+        const minutes = Math.floor(hoursms / (60 * 1000));
+        const minutesms = ms % (60 * 1000);
+        const seconds = Math.floor(minutesms / 1000);
+        return { days, hours, minutes, seconds };
+      };
+
+      startCountdownInput.onclick = (event) => {
+        countdownDateInput.classList.add("hidden");
+        startCountdownInput.classList.add("hidden");
+        setClock();
+      };
+
+      countdownDateInput.onchange = (event) => {
+        targetTime.time = new Date(event.target.value);
+        setClock();
+      };
+
+      const setClock = () => {
+        const dhmValue = dhm(targetTime.time - new Date());
+        days.style = `--value: ${dhmValue.days}`;
+        hours.style = `--value: ${dhmValue.hours}`;
+        minutes.style = `--value: ${dhmValue.minutes}`;
+        seconds.style = `--value: ${dhmValue.seconds}`;
+        requestAnimationFrame(setClock);
+      };
+      setClock();
+    </script>
+  </body>
+</html>
